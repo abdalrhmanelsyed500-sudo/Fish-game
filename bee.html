@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bee — استوديو شخصية بكسل أرت لمنصات جانبية</title>
+<style>
+  :root{
+    --night:#120f1e; --bg:#171325; --panel:#211a33; --panel2:#2b2140;
+    --line:#453a5f; --line2:#5b4d7a;
+    --honey:#f2bb4a; --honey-lt:#fde49f; --honey-dp:#b76f1a;
+    --lilac:#aca5b9; --lilac-lt:#eae7f0; --sage:#c8cbbb;
+    --moss:#5faa7c; --ink:#0c0912; --txt:#e4ddcf; --muted:#a79bb6;
+    --pixel:2px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--txt);
+    background:
+      radial-gradient(1100px 640px at 78% -8%, #3a2a52 0%, transparent 62%),
+      radial-gradient(900px 620px at 4% 108%, #2a3f3a 0%, transparent 58%),
+      var(--night);
+    font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.22;
+    background-image:linear-gradient(rgba(242,187,74,.05) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(242,187,74,.05) 1px, transparent 1px);
+    background-size:32px 32px;
+    mask-image:radial-gradient(circle at 50% 38%, #000 38%, transparent 85%);
+  }
+  a{color:var(--honey-lt)}
+  header{
+    display:flex; align-items:center; gap:16px; padding:16px 24px 12px;
+    border-bottom:1px solid rgba(69,58,95,.7);
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, rgba(18,15,30,.96), rgba(18,15,30,.62));
+    backdrop-filter: blur(7px);
+  }
+  .brand{display:flex; align-items:center; gap:12px}
+  .sigil{
+    width:46px;height:46px;flex:none;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(150deg,#2b2140,#14101f);
+    border:1px solid var(--line);
+    box-shadow:0 0 0 1px rgba(242,187,74,.10), 0 10px 26px rgba(0,0,0,.55);
+    position:relative;
+  }
+  .sigil i{
+    width:19px;height:14px;border-radius:50% 50% 46% 46%;
+    background:linear-gradient(180deg,#fde49f,#f2bb4a 46%,#b76f1a);
+    position:relative; box-shadow:0 0 14px rgba(242,187,74,.45);
+  }
+  .sigil i::before,.sigil i::after{
+    content:""; position:absolute; width:8px;height:2px;background:#2b2140; border-radius:2px;
+    left:-1px;
+  }
+  .sigil i::before{top:5px} .sigil i::after{top:9px; width:6px}
+  h1{font-size:17px;margin:0;letter-spacing:.2px}
+  h1 small{display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.6px;margin-top:3px}
+  header .spacer{flex:1}
+  .badge{
+    font-size:11px;color:var(--honey-lt);border:1px solid rgba(242,187,74,.35);
+    background:rgba(242,187,74,.07);padding:5px 10px;border-radius:999px;
+    display:inline-flex;gap:6px;align-items:center;white-space:nowrap;
+  }
+  .badge b{color:#fff}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--honey);box-shadow:0 0 8px var(--honey)}
+
+  main{
+    display:grid; grid-template-columns:minmax(0,1fr) 372px; gap:22px;
+    padding:20px 24px 44px; max-width:1460px; margin:0 auto; align-items:start;
+  }
+  @media (max-width:1080px){ main{grid-template-columns:1fr} }
+
+  .stage-card{
+    border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    background:linear-gradient(180deg,#191428,#0e0b16);
+    box-shadow:0 30px 70px -32px #000, inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .stage-wrap{position:relative}
+  canvas#stage{
+    display:block; width:100%; height:auto; aspect-ratio:16/9;
+    image-rendering:pixelated; image-rendering:crisp-edges; background:#120f1e;
+  }
+  .stage-bar{
+    position:absolute; inset:auto 0 0 0; display:flex; gap:8px; align-items:center;
+    padding:10px 12px; font-size:12px; color:var(--muted);
+    background:linear-gradient(0deg, rgba(10,8,16,.92), rgba(10,8,16,0));
+  }
+  .pill{
+    border:1px solid rgba(242,187,74,.35); background:rgba(33,26,51,.8);
+    color:var(--honey-lt); padding:5px 10px; border-radius:999px; font-size:12px;
+    display:inline-flex; gap:6px; align-items:center;
+  }
+  .pill b{color:#fff}
+  .corner{position:absolute; top:10px; inset-inline-start:10px; display:flex; gap:6px}
+  .icon-btn{
+    width:34px;height:34px;border-radius:9px;border:1px solid rgba(242,187,74,.3);
+    background:rgba(18,15,30,.78); color:var(--honey-lt); cursor:pointer;
+    display:grid;place-items:center; font-size:14px; transition:.15s;
+  }
+  .icon-btn:hover{background:rgba(242,187,74,.18); border-color:var(--honey)}
+  .icon-btn.on{background:rgba(242,187,74,.26); border-color:var(--honey-lt); color:#fff}
+
+  .strip{
+    border-top:1px solid var(--line); padding:10px 12px 12px;
+    background:linear-gradient(180deg, rgba(33,26,51,.6), rgba(16,13,26,.85));
+  }
+  .strip-head{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--muted); margin-bottom:8px}
+  .strip-head b{color:var(--honey-lt); font-weight:600}
+  canvas#strip{
+    display:block; width:100%; height:auto; image-rendering:pixelated;
+    border-radius:8px; background:
+      repeating-conic-gradient(rgba(255,255,255,.045) 0% 25%, transparent 0% 50%) 0 0/16px 16px;
+    border:1px solid rgba(69,58,95,.6);
+  }
+
+  .panel{
+    border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    background:linear-gradient(180deg, rgba(33,26,51,.96), rgba(20,16,33,.96));
+    box-shadow:0 30px 70px -42px #000;
+  }
+  .panel h2{
+    font-size:13px; margin:0; padding:12px 15px; letter-spacing:.3px; color:var(--honey-lt);
+    border-bottom:1px solid rgba(69,58,95,.75); display:flex; align-items:center; gap:8px;
+    background:linear-gradient(90deg, rgba(242,187,74,.12), transparent);
+  }
+  .panel h2 .num{
+    font-size:10px; color:var(--night); background:var(--honey); border-radius:5px;
+    padding:1px 6px; font-weight:700;
+  }
+  .rows{display:grid; gap:9px; padding:13px 15px 15px}
+  .anim-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:7px}
+  .anim{
+    display:flex; flex-direction:column; gap:2px; padding:8px 10px; text-align:right;
+    border:1px solid rgba(69,58,95,.9); border-radius:10px; cursor:pointer;
+    background:rgba(23,19,37,.85); color:var(--txt); font-family:inherit; transition:.14s;
+  }
+  .anim:hover{border-color:var(--line2); background:rgba(43,33,64,.9)}
+  .anim b{font-size:12.5px; font-weight:600}
+  .anim span{font-size:10px; color:var(--muted); letter-spacing:.2px}
+  .anim.on{
+    border-color:var(--honey); background:linear-gradient(180deg, rgba(242,187,74,.22), rgba(242,187,74,.08));
+    box-shadow:inset 0 0 0 1px rgba(242,187,74,.25);
+  }
+  .anim.on b{color:#fff}
+
+  .ctl{display:flex; align-items:center; gap:9px; font-size:11.5px; color:var(--muted)}
+  .ctl label{min-width:52px}
+  .ctl output{color:var(--honey-lt); min-width:38px; text-align:left; font-variant-numeric:tabular-nums}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; flex:1; height:4px; border-radius:4px;
+    background:linear-gradient(90deg, var(--honey-dp), var(--honey)); outline:none; direction:ltr;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:14px;height:14px;border-radius:50%;
+    background:var(--honey-lt); border:2px solid #7a5a14; cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:12px;height:12px;border-radius:50%;background:var(--honey-lt);
+    border:2px solid #7a5a14; cursor:pointer;
+  }
+  .btn-row{display:flex; flex-wrap:wrap; gap:7px}
+  .btn{
+    border:1px solid rgba(242,187,74,.3); background:rgba(23,19,37,.9); color:var(--honey-lt);
+    padding:7px 11px; border-radius:9px; font-size:11.5px; cursor:pointer;
+    font-family:inherit; transition:.14s; display:inline-flex; align-items:center; gap:5px;
+  }
+  .btn:hover{border-color:var(--honey); background:rgba(242,187,74,.14); color:#fff}
+  .btn.primary{
+    background:linear-gradient(180deg,#f2bb4a,#c98a22); color:#2a1d05; border-color:#fbe3a6; font-weight:700;
+  }
+  .btn.primary:hover{background:linear-gradient(180deg,#ffd06a,#e09a2a); color:#241804}
+
+  .swatches{display:flex; flex-wrap:wrap; gap:3px; padding:12px 15px 14px}
+  .sw{width:17px;height:17px;border-radius:4px; border:1px solid rgba(0,0,0,.45)}
+  .spec{display:grid; gap:6px; padding:12px 15px 16px; font-size:11.5px}
+  .spec div{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed rgba(69,58,95,.55); padding-bottom:5px}
+  .spec div:last-child{border-bottom:0}
+  .spec span{color:var(--muted)}
+  .spec b{color:var(--honey-lt); font-weight:600}
+  kbd{
+    font-family:ui-monospace,monospace; font-size:10px; padding:1px 5px; border-radius:4px;
+    border:1px solid var(--line2); background:rgba(12,9,18,.9); color:var(--honey-lt);
+  }
+  .hint{font-size:11px; color:var(--muted); line-height:1.75; padding:0 15px 15px; margin:0}
+  .toast{
+    position:fixed; inset-inline:0; bottom:24px; margin:auto; width:max-content; max-width:90vw;
+    background:rgba(18,15,30,.96); border:1px solid var(--honey); color:var(--honey-lt);
+    padding:9px 16px; border-radius:999px; font-size:12.5px; z-index:60;
+    opacity:0; transform:translateY(10px); transition:.25s; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="sigil"><i></i></div>
+    <h1>Bee — استوديو شخصية بكسل أرت<small>منظور جانبي لمنصات · بدون أي حدود سوداء</small></h1>
+  </div>
+  <div class="spacer"></div>
+  <a class="badge" href="./index.html" style="text-decoration:none">⟵ Warden studio</a>
+  <div class="badge"><span class="dot"></span> <b id="fps">60</b> FPS · <b id="animName">idle</b></div>
+</header>
+
+<main>
+  <section class="stage-card">
+    <div class="stage-wrap">
+      <canvas id="stage" width="960" height="540"></canvas>
+      <div class="corner">
+        <button class="icon-btn on" id="btnWorld" title="إظهار العالم (W)">◍</button>
+        <button class="icon-btn" id="btnGrid" title="شبكة البكسل (G)">▦</button>
+      </div>
+      <div class="stage-bar">
+        <span class="pill">مقياس <b id="zoomLabel">2×</b></span>
+        <span class="pill">طول الشخصية <b>104px</b></span>
+        <span class="pill">لوحة <b id="palPill">—</b></span>
+        <span class="spacer" style="flex:1"></span>
+        <span class="pill" id="timePill">t 0.00s</span>
+      </div>
+    </div>
+    <div class="strip">
+      <div class="strip-head"><b>شريحة الإطارات</b> · تُعاد رسمًا مع كل حركة — كل إطار مكمَّم على اللوحة</div>
+      <canvas id="strip" width="2240" height="268"></canvas>
+    </div>
+  </section>
+
+  <aside>
+    <div class="panel" style="margin-bottom:18px">
+      <h2><span class="num">01</span> الحركات</h2>
+      <div class="rows">
+        <div class="anim-grid" id="animGrid"></div>
+        <div class="ctl"><label>السرعة</label><input id="speed" type="range" min="0.15" max="2" step="0.05" value="1"><output id="speedOut">1.00×</output></div>
+        <div class="ctl"><label>التكبير</label><input id="zoom" type="range" min="1" max="4" step="1" value="2"><output id="zoomOut">2×</output></div>
+        <div class="ctl"><label>التردد</label><input id="dither" type="range" min="0" max="16" step="1" value="6"><output id="ditherOut">6</output></div>
+        <div class="btn-row">
+          <button class="btn" id="btnPlay">⏸ إيقاف</button>
+          <button class="btn" id="btnPrev">◀ السابقة</button>
+          <button class="btn" id="btnNext">التالية ▶</button>
+          <button class="btn" id="btnPauseAll">⟲ إعادة</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:18px">
+      <h2><span class="num">02</span> التصدير</h2>
+      <div class="rows">
+        <div class="btn-row">
+          <button class="btn primary" id="btnSheet">شريحة PNG (8 إطارات @2×)</button>
+          <button class="btn" id="btnFrame">إطار واحد @4×</button>
+          <button class="btn" id="btnGif">GIF (20 إطارًا @2×)</button>
+          <button class="btn" id="btnShot">لقطة المشهد @2×</button>
+        </div>
+        <p class="hint" style="padding:0">التصدير شفاف للشخصية، ويُحفظ بالاسم <code>bee-&lt;anim&gt;…</code> مباشرةً في مجلد التنزيلات.</p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:18px">
+      <h2><span class="num">03</span> اللوحة</h2>
+      <div class="swatches" id="swatches"></div>
+      <div class="spec" id="spec">
+        <div><span>عدد الألوان</span><b id="palCount">—</b></div>
+        <div><span>مقاس الإطار</span><b>280 × 268</b></div>
+        <div><span>ارتفاع الشخصية</span><b>150 وحدة تصميم</b></div>
+        <div><span>الحدود</span><b>لا يوجد أسود إطلاقًا</b></div>
+        <div><span>الحركات</span><b id="animCount">9</b></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="num">04</span> التحكم</h2>
+      <p class="hint">
+        <kbd>Space</kbd> تشغيل/إيقاف · <kbd>←</kbd> <kbd>→</kbd> تبديل الحركة ·
+        <kbd>G</kbd> شبكة · <kbd>W</kbd> العالم.<br>
+        كل وضع يُرسم رياضيًا من الزمن: لا إطارات منقولة يدويًا، ولا حدود سوداء — الحافة تُعرَّف بقيمة اللون وحرارته فقط.
+      </p>
+    </div>
+  </aside>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="./src/app/bee-app.js"></script>
+</body>
+</html>

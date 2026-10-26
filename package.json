@@ -1,8 +1,8 @@
 {
-  "name": "deep-reef-warden-studio",
+  "name": "pixel-character-studios",
   "version": "1.0.0",
   "private": true,
-  "description": "Deep Reef Warden — a fully procedural, high-detail pixel-art character & reef world studio: palette-quantised painterly rendering, an 8-animation rig, timeline scrubbing, sprite-sheet / PNG / GIF export.",
+  "description": "Two procedural pixel-art character studios: Deep Reef Warden (reef world) and Bee (side-view platformer), with palette-quantised painting, analytic animation rigs and sprite-sheet / GIF export.",
   "type": "module",
   "scripts": {
     "dev": "node tools/serve.mjs",
@@ -10,7 +10,11 @@
     "perf": "node tools/perf.mjs",
     "frames": "node tools/preview.mjs docs/character-idle.png 3 idle",
     "sheets": "node tools/sheet.mjs",
-    "gif": "node tools/gif-test.mjs docs/idle-loop.gif idle 16"
+    "gif": "node tools/gif-test.mjs docs/idle-loop.gif idle 16",
+    "bee": "node tools/serve.mjs",
+    "bee:smoke": "node tools/smoke-bee.mjs",
+    "bee:sheets": "node tools/bee-export.mjs",
+    "bee:scene": "node tools/bee-scene.mjs docs/bee/bee-world@3x.png idle 1.25 3"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.65"

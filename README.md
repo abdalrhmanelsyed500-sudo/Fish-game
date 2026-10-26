@@ -83,3 +83,60 @@ node tools/drive-export.mjs     # يصدّر docs/drive2x (نسخة 2×)
 | `docs/drive2x/` | https://drive.google.com/drive/folders/1HPwHCazDqHCs5swkiOVXmNouoAptsca4 |
 
 المحتوى: 8 شرائح `@2x` (5120×720)، لقطتان `@6x` (1920×2160)، 4 صور GIF `@2x` (640×720)، بطاقة اللوحة، `README.txt`، و`deep-reef-warden-source.zip`.
+
+---
+
+# 🐝 Bee — side-view platformer character / شخصية منصات جانبية
+
+Second studio in the repo: a tall, mournful bee-person in a honey costume, built for a **side-view platformer** — and, as requested, **with no black outlines at all**. The silhouette is defined by value + temperature: a warm honey shadow inside, a cool lilac rim on the back edge.
+
+الاستوديو الثاني في المستودع: شخصية نحلة طويلة حزينة بسترة عسل، مصمَّمة لمنصات بمنظور جانبي — و**بدون أي حدود سوداء** كما طلبت. الحافة تُعرَّف بقيمة اللون وحرارته: ظل عسلي دافئ من الداخل، وحافة ليلكية باردة على الظهر.
+
+![Bee world](docs/bee/bee-world@3x.png)
+
+## Run / التشغيل
+```bash
+npm run dev          # → http://localhost:5173/bee.html
+```
+| Page | What |
+| --- | --- |
+| `/index.html` | Deep Reef Warden studio |
+| `/bee.html` | **Bee studio** — 9 platformer animations, live scene, exports |
+
+## Animations / الحركات (9)
+| key | Arabic | duration | loop | notes |
+| --- | --- | --- | --- | --- |
+| `idle` | وقوف | 3.20 s | ✔ | breathing, antenna sway, blink |
+| `walk` | مشي | 0.92 s | ✔ | full stride, counter-swinging arms |
+| `run` | جري | 0.62 s | ✔ | forward lean, long stride |
+| `jump` | قفز | 0.58 s | one-shot | anticipation → launch → reach |
+| `fall` | سقوط | 0.80 s | ✔ | wings open, legs trailing |
+| `land` | هبوط | 0.36 s | one-shot | impact squash + settle |
+| `fly` | طيران | 0.60 s | ✔ | fast wing beat, dangling legs |
+| `sting` | لسعة | 0.78 s | one-shot | wind-up → thrust → recover |
+| `hurt` | إصابة | 0.50 s | one-shot | recoil, eyes shut |
+
+## Export / التصدير
+In the page: **sprite strip PNG (8 frames @2×)**, **single frame @4×**, **GIF (20 frames @2×)**, **scene still @2×**.
+Headless, everything at once:
+
+```bash
+node tools/bee-export.mjs        # → docs/bee/ (9 strips, contact sheet, 4 GIFs, world still, palette)
+node tools/bee-scene.mjs out.png idle 1.25 2
+node tools/bee-preview.mjs out.png walk 6 2 0 0.15
+node tools/smoke-bee.mjs         # expect "SMOKE TEST OK"
+```
+
+## Sprite spec / مواصفات الأصول
+| | |
+| --- | --- |
+| Frame | 280 × 268 px (design space, feet at y = 240) |
+| Character | 150 design units tall (antennae 176) |
+| Sheet | 8 frames left→right, **4480 × 536 @2×**, transparent |
+| Palette | 102 colours, zero pure black |
+| In-scene height | 130 px on a 480 × 270 stage |
+
+## Files
+`src/art/bee.js` (drawing) · `src/art/beePalette.js` · `src/engine/beeRig.js` (9 clips) ·
+`src/engine/beeScene.js` (twilight meadow: 3 parallax bands, floating islands, pollen) ·
+`src/engine/beeRenderer.js` · `src/app/bee-app.js` · `bee.html` · `tools/bee-*.mjs`
