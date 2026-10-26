@@ -69,3 +69,17 @@ node tools/perf.mjs                       # قياس زمن الإطار (الم
 - الحركة: 60fps تحليلي، مستقل عن معدل الإطارات، والتصدير محدَّد النتيجة (deterministic).
 
 ![sheet](docs/sheets/warden-idle-8f@1x.png)
+
+---
+
+## ☁️ حزمة Google Drive / Drive package
+
+```
+node tools/drive-export.mjs     # يصدّر docs/drive2x (نسخة 2×)
+```
+
+| المجلد | Drive folder |
+| --- | --- |
+| `docs/drive2x/` | https://drive.google.com/drive/folders/1HPwHCazDqHCs5swkiOVXmNouoAptsca4 |
+
+المحتوى: 8 شرائح `@2x` (5120×720)، لقطتان `@6x` (1920×2160)، 4 صور GIF `@2x` (640×720)، بطاقة اللوحة، `README.txt`، و`deep-reef-warden-source.zip`.

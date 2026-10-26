@@ -2,3 +2,6 @@ node_modules/
 preview.png
 *.log
 .DS_Store
+
+# generated Drive delivery copy (rebuild: node tools/drive-export.mjs)
+docs/drive2x/
