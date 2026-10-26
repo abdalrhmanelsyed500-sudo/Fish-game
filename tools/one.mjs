@@ -1,0 +1,13 @@
+import { createCanvas } from '@napi-rs/canvas';
+import { writeFileSync } from 'node:fs';
+import { drawGuardian } from '../src/art/guardian.js';
+import { PixelPipeline } from '../src/engine/pixel.js';
+import { sampleAnimation } from '../src/engine/rig.js';
+const W=320,H=360;
+const [anim,t,out,scale]=[process.argv[2],Number(process.argv[3]),process.argv[4],Number(process.argv[5]||3)];
+const cv=createCanvas(W,H); const ctx=cv.getContext('2d');
+drawGuardian(ctx, sampleAnimation(anim,t), t);
+new PixelPipeline().quantize(ctx,W,H,{dither:7});
+const big=createCanvas(W*scale,H*scale); const b=big.getContext('2d');
+b.imageSmoothingEnabled=false; b.drawImage(cv,0,0,W*scale,H*scale);
+writeFileSync(out,big.toBuffer('image/png'));

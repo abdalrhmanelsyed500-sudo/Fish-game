@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deep Reef Warden — استوديو أصول البكسل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  :root{
+    --deep:#04101a; --bg:#071620; --panel:#0a2230; --panel2:#0d3040;
+    --line:#155568; --cyan:#38a9b1; --cyan-lt:#6ed2d0; --pale:#bdf6ee;
+    --mint:#aadfc9; --red:#d93a44; --red-lt:#fb7f74; --gold:#d8b74b;
+    --purple:#7f5aa2; --ink:#030a12; --txt:#bfe4e2; --muted:#7ba3ab;
+    --pixel: 2px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:
+      radial-gradient(1200px 700px at 70% -10%, #0d3b4c 0%, transparent 60%),
+      radial-gradient(900px 600px at 10% 110%, #123a46 0%, transparent 55%),
+      #04101a;
+    color:var(--txt);
+    font-family:"Noto Naskh Arabic","Segoe UI","Tahoma",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  /* pixel-ish grid overlay */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.25;
+    background-image:linear-gradient(rgba(110,210,208,.05) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(110,210,208,.05) 1px, transparent 1px);
+    background-size:32px 32px;
+    mask-image:radial-gradient(circle at 50% 40%, #000 40%, transparent 85%);
+  }
+  a{color:var(--cyan-lt)}
+  header{
+    display:flex; align-items:center; gap:18px; padding:18px 26px 12px;
+    border-bottom:1px solid rgba(21,85,104,.6);
+    backdrop-filter: blur(6px);
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, rgba(6,26,38,.95), rgba(6,26,38,.65));
+  }
+  .brand{display:flex; align-items:center; gap:12px}
+  .sigil{
+    width:44px;height:44px;position:relative;flex:none;
+    background:linear-gradient(140deg,#0d3040,#07141d);
+    border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 0 0 1px rgba(110,210,208,.08), 0 8px 24px rgba(0,0,0,.5);
+    display:grid; place-items:center;
+  }
+  .sigil i{
+    width:14px;height:14px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffd0c4, #d93a44 55%, #4d0714 100%);
+    box-shadow:0 0 12px rgba(217,58,68,.75);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.18);opacity:1}}
+  h1{font-size:17px;margin:0;letter-spacing:.2px}
+  h1 small{display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:1px;margin-top:2px}
+  header .spacer{flex:1}
+  .badge{
+    font-size:11px;color:var(--mint);border:1px solid rgba(170,223,201,.35);
+    background:rgba(170,223,201,.07);padding:5px 10px;border-radius:999px;
+    display:inline-flex;gap:6px;align-items:center;white-space:nowrap;
+  }
+  .badge b{color:var(--pale)}
+  .dot{width:6px;height:6px;border-radius:50%;background:#6ed2d0;box-shadow:0 0 8px #6ed2d0}
+
+  main{
+    display:grid; grid-template-columns: minmax(0,1fr) 360px;
+    gap:22px; padding:22px 26px 40px; max-width:1400px; margin:0 auto;
+    align-items:start;
+  }
+  @media (max-width:1050px){ main{grid-template-columns:1fr} }
+
+  /* ── stage ── */
+  .stage-wrap{position:relative; border-radius:16px; overflow:hidden;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg,#061a26,#030c13);
+    box-shadow:0 30px 70px -30px #000, inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .stage{
+    display:block; width:100%; height:auto; aspect-ratio:320/360;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    background:#04101a;
+  }
+  .stage-topbar{
+    position:absolute; inset:auto 0 0 0; display:flex; gap:8px; align-items:center;
+    padding:10px 12px; background:linear-gradient(0deg, rgba(4,16,26,.92), rgba(4,16,26,0));
+    font-size:12px; color:var(--muted);
+  }
+  .pill{
+    border:1px solid rgba(56,169,177,.45); background:rgba(10,34,48,.75);
+    color:var(--pale); padding:5px 10px; border-radius:999px; font-size:12px;
+    display:inline-flex; gap:6px; align-items:center;
+  }
+  .pill b{color:#fff}
+  .corner{
+    position:absolute; top:10px; inset-inline-start:10px; display:flex; gap:6px;
+  }
+  .icon-btn{
+    width:34px;height:34px;border-radius:9px;border:1px solid rgba(56,169,177,.4);
+    background:rgba(7,22,32,.8); color:var(--pale); cursor:pointer;
+    display:grid;place-items:center; font-size:14px; transition:.15s;
+  }
+  .icon-btn:hover{background:rgba(26,106,124,.5); border-color:var(--cyan)}
+  .icon-btn.on{background:rgba(56,169,177,.28); border-color:var(--cyan-lt); color:#fff}
+
+  /* ── control panel ── */
+  .panel{
+    border:1px solid var(--line); border-radius:16px; background:
+      linear-gradient(180deg, rgba(10,34,48,.95), rgba(7,22,32,.95));
+    box-shadow:0 30px 70px -40px #000; overflow:hidden;
+  }
+  .panel h2{
+    font-size:13px; margin:0; padding:13px 16px; letter-spacing:.4px;
+    color:var(--pale); border-bottom:1px solid rgba(21,85,104,.7);
+    display:flex; align-items:center; gap:8px; font-weight:600;
+    background:linear-gradient(90deg, rgba(26,106,124,.25), transparent);
+  }
+  .panel h2 span.idx{
+    font-size:10px;color:var(--muted);border:1px solid rgba(123,163,171,.4);
+    border-radius:5px;padding:1px 5px
+  }
+  .panel .body{padding:14px 16px 18px}
+  .anims{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .anim{
+    position:relative; text-align:right; cursor:pointer; border-radius:10px;
+    border:1px solid rgba(21,85,104,.9); background:rgba(13,48,64,.5);
+    padding:9px 11px; color:var(--txt); transition:.15s; overflow:hidden;
+  }
+  .anim:hover{border-color:var(--cyan); background:rgba(26,106,124,.35)}
+  .anim.active{
+    border-color:var(--cyan-lt); background:linear-gradient(140deg, rgba(56,169,177,.35), rgba(26,106,124,.18));
+    box-shadow:0 0 0 1px rgba(110,210,208,.35), 0 10px 24px -14px var(--cyan);
+  }
+  .anim b{display:block;font-size:13px;color:#fff;font-weight:600}
+  .anim small{display:block;font-size:10px;color:var(--muted);letter-spacing:.6px;margin-top:1px}
+  .anim .len{
+    position:absolute; inset-inline-end:8px; top:8px; font-size:9px; color:var(--muted)
+  }
+  .anim .bar{position:absolute; inset:auto 0 0 0; height:2px; background:rgba(110,210,208,.15)}
+  .anim .bar i{display:block;height:100%;width:0;background:var(--cyan-lt)}
+
+  .row{display:flex; align-items:center; gap:10px; margin:12px 0}
+  .row label{font-size:12px;color:var(--muted); min-width:74px}
+  .row .val{font-size:11px;color:var(--pale);margin-inline-start:auto;font-variant-numeric:tabular-nums}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; height:4px; border-radius:4px; flex:1;
+    background:linear-gradient(90deg, var(--cyan) var(--fill,50%), rgba(21,85,104,.8) var(--fill,50%));
+    outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#eafff7,#38a9b1 60%,#0d3040);
+    border:1px solid #0a2230; box-shadow:0 0 10px rgba(110,210,208,.6)
+  }
+  .seg{display:flex; gap:6px; flex-wrap:wrap}
+  .seg button{
+    flex:1; min-width:56px; padding:7px 6px; font-size:11px; cursor:pointer;
+    border-radius:8px; border:1px solid rgba(21,85,104,.9);
+    background:rgba(13,48,64,.5); color:var(--txt); transition:.15s
+  }
+  .seg button.on{background:rgba(56,169,177,.3);border-color:var(--cyan-lt);color:#fff}
+  .seg button:hover{border-color:var(--cyan)}
+
+  .btn{
+    width:100%; padding:11px 12px; border-radius:10px; cursor:pointer; font-size:13px;
+    border:1px solid rgba(56,169,177,.5); color:#eafff7; font-weight:600; letter-spacing:.2px;
+    background:linear-gradient(180deg, rgba(56,169,177,.34), rgba(13,48,64,.7));
+    transition:.15s; display:flex;align-items:center;justify-content:center;gap:8px
+  }
+  .btn:hover{border-color:var(--cyan-lt); box-shadow:0 10px 30px -18px var(--cyan-lt)}
+  .btn.ghost{background:rgba(13,48,64,.4); font-weight:500}
+  .btn.red{
+    border-color:rgba(251,127,116,.5);
+    background:linear-gradient(180deg, rgba(217,58,68,.4), rgba(77,7,20,.6));
+  }
+
+  .palette{display:grid; grid-template-columns:repeat(13,1fr); gap:3px; margin-top:4px}
+  .palette i{display:block; aspect-ratio:1; border-radius:2px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+  .ramp-label{font-size:10px;color:var(--muted);margin:8px 0 3px;letter-spacing:.5px}
+
+  .stars{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+  .stars span{display:inline-flex;gap:5px;align-items:center}
+  .stars b{color:var(--mint);font-weight:600}
+
+  footer{padding:0 26px 40px; max-width:1400px; margin:0 auto; color:var(--muted); font-size:12px; line-height:1.9}
+  footer b{color:var(--mint)}
+  .kbd{
+    font-family:ui-monospace,monospace;font-size:11px;background:rgba(13,48,64,.8);
+    border:1px solid rgba(21,85,104,.9);border-radius:5px;padding:1px 6px;color:var(--pale)
+  }
+  .speaker{position:absolute;inset-inline-start:12px;bottom:12px;display:flex;gap:8px;align-items:center}
+  .toast{
+    position:fixed; inset-inline-start:50%; transform:translateX(-50%) translateY(-20px);
+    bottom:26px; background:rgba(10,34,48,.97); border:1px solid var(--cyan);
+    color:#eafff7; padding:10px 16px; border-radius:10px; font-size:13px;
+    opacity:0; transition:.25s; pointer-events:none; z-index:99;
+    box-shadow:0 20px 50px -20px #000;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .split{height:1px;background:rgba(21,85,104,.7);margin:14px 0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="sigil"><i></i></div>
+    <h1>حارس الشعاب العميقة
+      <small>DEEP REEF WARDEN · PIXEL ASSET STUDIO</small>
+    </h1>
+  </div>
+  <div class="spacer"></div>
+  <div class="badge"><span class="dot"></span> <b id="fps">60</b> إطار/ث</div>
+  <div class="badge">اللوحة: <b>66 لونًا</b></div>
+  <div class="badge">الدقّة: <b>320×360</b></div>
+</header>
+
+<main>
+  <section>
+    <div class="stage-wrap">
+      <canvas id="stage" class="stage" width="640" height="720"></canvas>
+      <div class="corner">
+        <button class="icon-btn on" id="btnWorld" title="إظهار/إخفاء العالم">🌊</button>
+        <button class="icon-btn" id="btnGrid" title="شبكة البكسل">▦</button>
+        <button class="icon-btn" id="btnPause" title="إيقاف/تشغيل">⏸</button>
+      </div>
+      <div class="stage-topbar">
+        <span class="pill">الحركة: <b id="curAnim">وقوف</b></span>
+        <span class="pill">الزمن: <b id="curTime">0.00</b>ث</span>
+        <span class="pill">البعد: <b id="curZoom">2×</b></span>
+        <span style="margin-inline-start:auto" class="pill">مبني على 8 حركات أساسية</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h2><span class="idx">01</span> الخط الزمني للحركة</h2>
+      <div class="body" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <input id="scrub" type="range" min="0" max="1000" value="0" style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px">
+            <span>بداية الحلقة</span><span id="durLabel">4.2 ث</span><span>نهاية الحلقة</span>
+          </div>
+        </div>
+        <div class="seg" style="flex:0 0 auto;min-width:170px">
+          <button id="btnPrev" title="السابق">◀</button>
+          <button id="btnNext" title="التالي">▶</button>
+          <button id="btnLoop" class="on">تكرار</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside style="display:grid;gap:18px">
+    <div class="panel">
+      <h2><span class="idx">02</span> مكتبة الحركات</h2>
+      <div class="body">
+        <div class="anims" id="anims"></div>
+        <div class="split"></div>
+        <div class="row">
+          <label>سرعة</label>
+          <input id="speed" type="range" min="10" max="200" value="100">
+          <span class="val" id="speedVal">1.00×</span>
+        </div>
+        <div class="row">
+          <label>تكبير</label>
+          <input id="zoom" type="range" min="1" max="4" step="0.5" value="2">
+          <span class="val" id="zoomVal">2×</span>
+        </div>
+        <div class="row">
+          <label>حدّة البكسل</label>
+          <input id="dither" type="range" min="0" max="30" value="7">
+          <span class="val" id="ditherVal">7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="idx">03</span> التصدير</h2>
+      <div class="body" style="display:grid;gap:9px">
+        <div class="seg">
+          <button id="sheetFrames8" class="on">8 إطارات</button>
+          <button id="sheetFrames12">12</button>
+          <button id="sheetFrames16">16</button>
+        </div>
+        <button class="btn" id="btnSheet">⤓ تصدير شريحة حركة (PNG)</button>
+        <button class="btn ghost" id="btnFrame">⤓ تصدير إطار واحد (PNG)</button>
+        <button class="btn ghost red" id="btnGif">⤓ تصدير GIF متحرك</button>
+        <div style="font-size:11px;color:var(--muted);line-height:1.7">
+          الشرائح تُصدَّر بدقّة البكسل الأصلية مع خلفية شفافة لتُستخدم مباشرة في محرّك اللعبة.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="idx">04</span> لوحة الألوان</h2>
+      <div class="body" id="paletteBody"></div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="idx">05</span> مواصفات الأصل</h2>
+      <div class="body">
+        <div class="stars">
+          <span>الإطارات: <b>8</b></span>
+          <span>طبقات: <b>17</b></span>
+          <span>ظلال: <b>مستوية</b></span>
+          <span>توقيت: <b>60fps</b></span>
+          <span>التوقيع: <b>6 رامبات</b></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  كل بكسل في هذه الصفحة مرسوم بالكود: الشخصية والعالم والحركة واللوحة اللونية. لا صور جاهزة ولا رسم يدوي —
+  الشكل كله يُعاد توليده في كل إطار، ثم يُختزل إلى <b>66 لونًا</b> بترتيب Bayer للحصول على ملمس بكسل أصيل.
+  <br>
+  اختصارات: <span class="kbd">مسافة</span> إيقاف/تشغيل · <span class="kbd">→</span> الحركة التالية · <span class="kbd">←</span> السابقة · <span class="kbd">G</span> الشبكة · <span class="kbd">W</span> العالم
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="./src/app/main.js"></script>
+</body>
+</html>
