@@ -140,3 +140,6 @@ node tools/smoke-bee.mjs         # expect "SMOKE TEST OK"
 `src/art/bee.js` (drawing) · `src/art/beePalette.js` · `src/engine/beeRig.js` (9 clips) ·
 `src/engine/beeScene.js` (twilight meadow: 3 parallax bands, floating islands, pollen) ·
 `src/engine/beeRenderer.js` · `src/app/bee-app.js` · `bee.html` · `tools/bee-*.mjs`
+
+### ☁️ Bee on Drive / حزمة النحلة على الدرايف
+https://drive.google.com/drive/folders/1i0vdLqurI88B9yAMAOsKTg4cKdWCpzNF — 9 شرائح @2×، شريحة تجميعية، 4 صور GIF، لقطة العالم، بطاقة اللوحة، و`bee-source.zip`.
